@@ -1,0 +1,221 @@
+<!-- Using load tag to enable the use of static tags -->
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  {% block meta %}
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  {% endblock %}
+
+  <!-- custom meta -->
+  {% block extra_meta %}
+  {% endblock %}
+
+  {% block corecss %}
+    <!-- Google font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato&display=swap">
+    <!-- Css folder -->
+    <!-- <link rel="stylesheet" href="{% static 'css/base.css' %}"> -->
+    <!-- UIkit -->
+    <link rel="stylesheet" href="{% static 'css/uikit.min.css' %}" />
+    <!-- Custom -->
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
+  {% endblock %}
+
+  <!-- custom css -->
+  {% block extra_css %}
+  {% endblock %}
+
+  {% block corejs %}
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" 
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" 
+      crossorigin="anonymous"></script>
+    <!-- Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"></script>
+    <!-- UIkit, including icons -->
+    <script src="{% static 'js/uikit.min.js' %}"></script>
+    <script src="{% static 'js/uikit-icons.min.js' %}"></script>
+    <!-- Stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
+  {% endblock %}
+  <!-- custom js -->
+  {% block extra_js %}
+  {% endblock %}
+  <!-- Browser tab title -->
+  <title>canvas heaven {% block extra_title %}{% endblock %}</title>
+</head>
+<body>
+  <header>
+    <!-- Navigation -->
+    <nav uk-sticky class="uk-navbar-container custom-navbar-bg" uk-navbar>
+      <!-- See external file for desktop and mobile menu -->
+      {% include 'includes/mobile-top-header.html' %}
+      {% include 'includes/main-nav.html' %}
+      <!-- Navbar right -->
+      <div class="uk-navbar-right">
+        <div class="uk-navbar-nav">
+          <!-- User menu based on authentication -->
+          {% if request.user.is_authenticated %}
+            <!-- Show toggle button for authenticated users -->
+            <li>
+              <a href="#offcanvas-flip" 
+                class="uk-text-capitalize uk-text-bold uk-text-secondary" uk-toggle>
+                 My Account
+              </a>
+            </li>
+            <!-- Off-canvas menu -->
+            <div id="offcanvas-flip" uk-offcanvas="flip: true; overlay: true">
+              <div class="uk-offcanvas-bar">
+                <!-- User menu close button -->
+                <button class="uk-offcanvas-close" 
+                  type="button" 
+                  uk-close></button>
+                <!-- Off-canvas menu -->
+                <ul class="uk-nav uk-nav-default">
+                  <li class=""><span>Account Overview</span></li>
+                  <!-- Show additional superuser menu -->
+                  {% if request.user.is_superuser %}
+                    <!-- Add products -->
+                    <li class="uk-margin-top">
+                      <a href="{% url 'add_product' %}">
+                        <span uk-icon="icon: tag" class="uk-margin-small-right"></span> Add Products
+                      </a>
+                    </li>
+                    <!-- Admin order overview -->
+                    <li class="uk-margin-top">
+                      <a href="{% url 'allorders' %}">
+                        <span uk-icon="icon: album" class="uk-margin-small-right"></span> All Orders
+                      </a>
+                    </li>
+                    <hr class="uk-margin">
+                  {% endif %}
+                  <!-- Order history and address -->
+                  <li class="uk-margin-top">
+                    <a href="{% url 'profile' %}">
+                      <span uk-icon="icon: user" class="uk-margin-small-right"></span> Shipping Details
+                    </a>
+                  </li>
+                  <!-- Custom products created -->
+                  <li class="uk-margin-top">
+                    <a href="{% url 'profile_custom_products' %}">
+                      <span uk-icon="icon: image" class="uk-margin-small-right"></span> My Custom Products
+                    </a>
+                  </li>
+                  <!-- Custom product orders -->
+                  <li class="uk-margin-top">
+                    <a href="{% url 'profile_custom_orders' %}">
+                      <span uk-icon="icon: download" class="uk-margin-small-right"></span> Purchases & Downloads
+                    </a>
+                  </li>
+                  <hr class="uk-margin">
+                  <!-- Show 'allauth' log out -->
+                  <li class="uk-parent uk-margin-top">
+                    <a href="{% url 'account_logout' %}" uk-icon="icon: sign-out">Log Out</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          {% else %}
+            <!-- Non authenticated users -->
+            <!-- Log in button -->
+            <li>
+              <a href="{% url 'account_login' %}" 
+                class="uk-text-capitalize uk-text-bold uk-margin-right uk-text-secondary">
+                 Log In
+              </a>
+            </li>
+            <!-- Sign up button -->
+            <li class="uk-margin uk-margin-right desktop-navbar">
+              <a href="{% url 'account_signup' %}" 
+                class="uk-button uk-button-primary 
+                       uk-text-capitalize uk-border-pill custom-sign-up">
+                 Sign Up
+              </a>
+            </li>
+          {% endif %}
+          <!-- Shopping cart button -->
+          <li class="uk-margin-right custom-mobile-cart-btn">
+            <a href="{% url 'view_bag' %}">
+              <div class="uk-text-center 
+                   {% if grand_total %}
+                     uk-text-emphasis
+                   {% endif %}">
+                <span uk-icon="icon: bag"></span>
+                <div class="uk-navbar-subtitle">
+                  {% if grand_total %}
+                    ${{ grand_total|floatformat:2 }}
+                  {% else %}
+                    $0.00
+                  {% endif %}
+                </div>
+              </div>
+            </a>
+          </li>
+        </div>
+      </div>
+    </nav>
+    <!-- Banner -->
+    <div uk-sticky="offset: 80" class="custom-sticky-banner">
+      <div class="uk-text-center uk-text-small uk-text-bold uk-background-default uk-light uk-panel uk-text-emphasis custom-banner-bg">
+        <p>Free delivery on orders over ${{ free_delivery_threshold }} for all prints of 'artwork'!</p>
+      </div>
+    </div>
+    <!-- 
+      Search field
+      Use 'button' instead of 'a' tag, otherwise 'q' is not going to be in request
+    -->
+    <div class="uk-margin uk-margin-medium-top custom-search-padding">
+      <form method="GET" action="{% url 'products' %}" 
+        class="uk-search uk-search-default uk-align-center uk-width-large">
+        <input class="uk-search-input uk-border-pill custom-search-bg" 
+          type="text" 
+          name="q" 
+          placeholder="Search">
+        <button class="uk-search-icon-flip uk-border-circle custom-search-icon" 
+          type="submit" uk-search-icon>
+        </button>
+      </form>
+    </div>
+  </header>
+  <!-- Notifications -->
+  {% if messages %}
+    {% for message in messages %}
+      <!-- 
+        Include notification template in templates/includes/notifications/ 
+        Using Django message types
+      -->
+      {% with message.level as level %}
+        {% if level == 40 %}
+          {% include 'includes/notifications/message_error.html' %}
+        {% elif level == 30 %}
+          {% include 'includes/notifications/message_warning.html' %}
+        {% elif level == 25 %}
+          {% include 'includes/notifications/message_success.html' %}
+        {% else %}
+          {% include 'includes/notifications/message_info.html' %}
+        {% endif %}
+      {% endwith %}
+    {% endfor %}
+  {% endif %}
+  <!-- custom header -->
+  {% block page_header %}
+  {% endblock %}
+  <!-- custom content -->
+  {% block content %}
+  {% endblock %}
+  <!-- custom js -->
+  {% block postloadjs %}
+    <script>
+      // Trigger uikit modal view for notifications
+      UIkit.modal('#notification').show();
+    </script>
+  {% endblock %}
+</body>
+</html>

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'profiles/css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+  <!-- Content wrapper -->
+  <div class="uk-container uk-container-medium">
+    <!-- Page title -->
+    <h1 class="uk-heading-line uk-text-center uk-margin-medium-bottom">
+      <span>Shipping Details</span>
+    </h1>
+    <div class="uk-flex uk-flex-center uk-child-width-expand@s" uk-grid>
+      <!-- Form displays as first in desktop view with uk-flex-first@s -->
+      <div class="uk-width-auto@m uk-grid-item-match uk-flex-first@s">
+        <div class="uk-card uk-card-default uk-card-body">
+          <p class="uk-margin">Default Delivery Information</p>
+          <form action="{% url 'profile' %}" method="POST" id="profile-update-form">
+            <!-- Django token -->
+            {% csrf_token %}
+            <!-- Details -->
+            <fieldset class="uk-fieldset">
+              <legend class="uk-text-small uk-text-bolder">
+                Contact
+              </legend>
+                {{ form|crispy }}
+            </fieldset>
+            <!-- Submit button -->
+            <div class="uk-margin-medium-top">
+              <button id="submit-button" class="uk-button uk-button-secondary uk-border-pill uk-text-upppercase uk-align-right custom-checkout-button-margin">
+                Update Information<span class="custom-checkout"></span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block postloadjs %}
+  {{ block.super }}
+  <script src="{% static 'profiles/js/countryfield.js' %}"></script>
+{% endblock %}

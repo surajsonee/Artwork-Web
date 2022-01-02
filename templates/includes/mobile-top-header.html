@@ -1,0 +1,26 @@
+<!-- Mobile toggle menu -->
+<div class="uk-navbar-left mobile-navbar">
+  <!-- Mobile toggle button -->
+  <a class="uk-navbar-toggle" 
+     uk-navbar-toggle-icon href="#offcanvas-overlay" 
+     uk-toggle></a>
+  <!-- Mobile off-canvas menu -->
+  <div id="offcanvas-overlay" uk-offcanvas="overlay: true">
+    <div class="uk-offcanvas-bar">
+      <!-- Off-canvas close button -->
+      <button class="uk-offcanvas-close" type="button" uk-close></button>
+      <!-- Off-canvas menu -->
+      <ul class="uk-nav uk-nav-default">
+        <li class="uk-active">
+          <a href="{% url 'home' %}"><strong>canvas</strong> heaven</a>
+        </li>
+        <li class="uk-parent uk-margin-top">
+          <a href="{% url 'products' %}">Collection</a>
+        </li>
+        <li class="uk-parent uk-margin-top">
+          <a href="{% url 'add_custom_product' %}">Request Custom Artwork</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
